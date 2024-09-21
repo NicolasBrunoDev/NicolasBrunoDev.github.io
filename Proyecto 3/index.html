@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tetris Javascript</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+    <audio src="assets/tetris.mp3" loop></audio>
+    <button id="playAudioBtn" class="audio-btn">
+        <i class="fas fa-volume-up"></i>
+    </button>
+    <button class ="stop-btn" id="stopButton">
+        <i class="fas fa-stop"></i>
+    </button>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Estilos del botón */
+        .audio-btn, .stop-btn {
+            background-color: #4CAF50; /* Color de fondo del botón */
+            border: none;
+            color: white;
+            padding: 15px;
+            font-size: 20px;
+            border-radius: 50%; /* Hace el botón redondo */
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+            margin: 20px 10; /* Espacio entre botones */
+        }
+
+        /* Cambiar color al hacer hover */
+        .audio-btn:hover, .stop-btn:hover {
+            background-color: #45a049;
+        }
+
+        /* Tamaño del icono */
+        .audio-btn i, .stop-btn i {
+            font-size: 24px;
+        }
+
+        canvas {
+            filter: drop-shadow(5px 5px 2px rgba(0, 0, 0, 0.4));
+        }
+    </style>
+    <script src="Tablero.js"></script>
+    <script src="Tetrimino.js"></script>
+    <script>
+       
+        const audio = new Audio('assets/tetris.mp3');
+        audio.loop = true;
+        const MARGEN_TABLERO = 10
+        let regulador_velocidad_teclas = 0
+        let regulador_de_caida = 0
+        let lineas_hechas = 0
+
+          // Reproducir el audio cuando se haga clic en el botón
+          document.getElementById('playAudioBtn').addEventListener('click', () => {
+            if(audio.paused){
+                audio.loop = true,
+                audio.volume = 0.7,
+                audio.currentTime= 0,
+                audio.play();
+            } else {
+                audio.pause
+            }
+        });
+
+         // Detener el audio al hacer clic en el botón de detener
+         document.getElementById('stopButton').addEventListener('click', () => {
+            audio.pause(); // Pausar el audio
+            audio.currentTime = 0; // Reiniciar el audio al principio
+        });
+
+        /* 
+        Generación de fondo dinámico
+        */
+        let angulo_fondo = Math.random() * 360
+        let tono_fondo = Math.random() * 360
+        setInterval(() => {
+            document.body.style.background = `linear-gradient(
+                ${angulo_fondo}deg, 
+                hsl(${tono_fondo},100%,50%),
+                hsl(${tono_fondo},100%,0%)
+            )`
+            angulo_fondo += Math.random()
+            tono_fondo += Math.random()
+        }, 20);
+
+        /* 
+        Dificultad, hacer caer las piezas cada determinada cantidad de tiempo,
+        simulando una especie de gravedad, esto se hace fácilmente con un setInterval
+        */
+        setInterval(() => {
+            if (millis() - regulador_de_caida < 300) {
+                return
+            }
+            regulador_de_caida = millis()
+            tetrimino.moverAbajo()
+        }, 500);
+
+
+        /* 
+        La función setup es nativa de p5.js
+
+        y sirve para ajustar las propiedades iniciales de nuestros objetos 
+        y variables
+        */
+        function setup() {
+            createCanvas(900, 600) //crea un canvas
+            /* 
+            VARIABLES GLOBALES
+
+            es importante que no le pongan let, ni var, ni const a las siguientes 
+            variables. Para que puedan ser identificadas como globales
+            */
+            tablero = new Tablero()
+            crearMapeoBaseTetriminos()
+            tetrimino = new Tetrimino()
+            resizeCanvas(
+                tablero.ancho + 2 * MARGEN_TABLERO,
+                tablero.alto + 2 * MARGEN_TABLERO + 2*tablero.lado_celda
+            )
+        }
+
+        /* 
+        La función draw es nativa de p5.js
+
+        y sirve para dar instrucciones precisas de dibujo sobre el canvas
+        */
+        function draw() {
+            clear()
+            dibuajarPuntaje()
+            tablero.dibujar()
+            tetrimino.dibujar()
+            keyEventsTetris()
+        }
+
+        function dibuajarPuntaje() {
+            push()
+            textSize(20)
+            strokeWeight(2)
+            stroke("black")
+            fill("white")
+            text(
+                "Líneas: " + lineas_hechas,
+                tablero.posición.x,
+                tablero.posición.y - tablero.lado_celda / 2
+            )
+            pop()
+        }
+
+        let límite_regulador_velocidad_teclas = 100
+
+        function keyEventsTetris() {
+    if (millis() - regulador_velocidad_teclas < límite_regulador_velocidad_teclas) {
+        return;
+    }
+    límite_regulador_velocidad_teclas = 100;
+    regulador_velocidad_teclas = millis();
+
+    // Movimiento a la derecha (flecha derecha o tecla D/d)
+    if (keyIsDown(RIGHT_ARROW) || keyIsDown(68) || keyIsDown(100)) {
+        tetrimino.moverDerecha();
+        regulador_de_caida = millis();
+    }
+    // Movimiento a la izquierda (flecha izquierda o tecla A/a)
+    if (keyIsDown(LEFT_ARROW) || keyIsDown(65) || keyIsDown(97)) {
+        tetrimino.moverIzquierda();
+        regulador_de_caida = millis();
+    }
+    // Movimiento hacia abajo (flecha abajo o tecla S/s)
+    if (keyIsDown(DOWN_ARROW) || keyIsDown(83) || keyIsDown(115)) {
+        tetrimino.moverAbajo();
+        regulador_de_caida = millis();
+    }
+    // Girar tetrimino (flecha arriba o tecla W/w)
+    if (keyIsDown(UP_ARROW) || keyIsDown(87) || keyIsDown(119)) {
+        límite_regulador_velocidad_teclas = 150;
+        tetrimino.girar();
+        regulador_de_caida = millis();
+    }
+    // Colocar en el fondo (tecla de espacio)
+    if (keyIsDown(32)) {
+        límite_regulador_velocidad_teclas = 200;
+        tetrimino.ponerEnElFondo();
+        regulador_de_caida = millis();
+    }
+}
+
+    </script>
+</body>
+
+</html>
