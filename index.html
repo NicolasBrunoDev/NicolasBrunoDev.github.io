@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="Scripts/scripts.js"></script>
+    <title>Nicolas Bruno</title>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <img src="assets/logo.png" alt="Logo del nav"/>
+        </div>
+        <nav>
+            <ul class="nav-links">
+                
+                <li><a href="#projects">Proyectos</a></li>
+                <li><a href="#sobre-mi">Sobre Mi</a></li>
+            </ul>
+        </nav>
+        <a href="#contact" class="btn"><button>Contacto</button></a>
+
+        <a onclick="openNav()" class="menu" href="#"><button>Menu</button></a>
+
+        <div class="overlay" id="mobile-menu">
+            <a onclick="closeNav()" href="" class="close">&times;</a>
+            <div class="overlay-content">
+                
+                <a href="#projects">Proyectos</a>
+                <a href="#sobre-mi">Sobre Mi</a>
+                <a href="#contact">Contacto</a>
+            </div>
+        </div>
+
+    </header>
+
+    <main>
+        <section class="hero parallax-container" id="sobre-mi">
+            <div class="hero-background parallax-bg"></div>
+            <div class="hero-content">
+                <h1>Nicolas Bruno</h1>
+                <p>Soy un amante del software, la informatica y los videojuegos</p>
+                <div class="hero-buttons">
+                    <a href="#contact" class="button">Contact Me</a>
+                    <a href="#projects" class="button button-outline">View Projects</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects">
+            <h2>Proyectos</h2>
+            <div class="projects-slider">
+                <div class="slider-content">
+                    <a class="project-card" href="">
+                        <img src="assets/Arkanoid.png" alt="Arkanoid-Game">
+                        <h3>Arkanoid Js</h3>
+                        <p>El clasico juego de Arkanoid ahora en Js.</p>
+                    </a>
+                    <a class="project-card" href="https://alphafenrirdev.github.io">
+                        <img src="assets/Confia en mi.png" alt="Task Management App">
+                        <h3>Boton de Confia en mi</h3>
+                        <p>Divertido y gracioso, ¿Confias en mi?</p>
+                    </a>
+                    <a class="project-card" href="">
+                        <img src="assets/Tetris.png" alt="Portfolio Website">
+                        <h3>Tetris Js</h3>
+                        <p>Creado usando p5.js, un clasico eterno.</p>
+                    </a>
+                </div>
+                <div class="slider-nav">
+                    <button id="prevBtn">❮</button>
+                    <button id="nextBtn">❯</button>
+                </div>
+            </div>
+            <script src="Scripts/Slider.js"></script>
+        </section>
+        
+        
+        <section class="gameBoy">
+            <!--Cambiamos los idiomas por que me quedo sin referencias de lo que estoy haciendo, ¿hay mas palabras para tech?-->
+                <div class="tecnologias-titulo">Tecnologías</div>
+                <div class="parallax-ContainerGBA">
+                        <div class="parallax-bgGBA"></div>
+                </div>
+                <div class="game-boy">
+                    <div class="screen">
+                        <img id="techLogo" src="/placeholder.svg?height=150&width=150" alt="Logo de tecnología">
+                    </div>
+                <div class="controls">
+                    <div class="d-pad">
+                        <button id="prevButton" aria-label="Tecnología anterior">&lt;</button>
+                        <button id="nextButton" aria-label="Siguiente tecnología">&gt;</button>
+                    </div>
+                    <div class="action-buttons">
+                        <div class="action-button"></div>
+                        <div class="action-button"></div>
+                    </div>
+                </div>
+                    <div id="techName" class="tech-name"></div>
+                </div>
+                <script src="Scripts/parallaxGBA.js"></script>
+                <script src="Scripts/GBA.js"></script>
+        </section>
+
+        <section id="contact">
+            <h2>Contacto</h2>
+            <form>
+                <div>
+                    <label for="name">Tu nombre:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div>
+                    <label for="email">Tu Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div>
+                    <label for="message">Mensaje:</label>
+                    <textarea id="message" name="message" required></textarea>
+                </div>
+                <button type="submit">Enviar mensaje</button>
+            </form>
+            <div id="Datos-Contactos">
+                <ul>
+                    <p id="Datoadicional">Datos de contacto adicionales.</p>
+                    <p>nicolasbruno874@gmail.com</p>
+                </ul>
+            </div>
+            
+            
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Nicolas Bruno. Todos los derechos reservados.</p>
+        <nav>
+            <a href="#" aria-label="GitHub">GitHub</a>
+            <a href="#" aria-label="LinkedIn">LinkedIn</a>
+            <a href="#" aria-label="Email">Email</a>
+        </nav>
+    </footer>
+
+    <script type="text/JavaScript" src="Scripts/Nav.js"></script>
+</body>
+</html>
